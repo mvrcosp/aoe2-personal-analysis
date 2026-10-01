@@ -1,2 +1,7 @@
 docs/
 env/
+data/raw/*.aoe2record
+data/processed/
+
+__pycache__/
+*.pyc

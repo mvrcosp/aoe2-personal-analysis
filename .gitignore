@@ -1,6 +1,8 @@
 docs/
 env/
-data/raw/*.aoe2record
+
+data/raw/aoe2rec/*.aoe2record
+data/raw/api/
 data/processed/
 
 __pycache__/

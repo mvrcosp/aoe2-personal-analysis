@@ -18,8 +18,32 @@ Na raiz do projeto, crie e ative um ambiente virtual e instale as dependências:
 ```bash
 python -m venv env
 source env/bin/activate
-pip install -r parser/requirements.txt
+pip install -r requirements.txt
 ```
+
+## Banco analítico PostgreSQL
+
+Configure uma senha local em `.env` (esse arquivo é ignorado pelo Git) e suba o banco:
+
+```bash
+cp .env.example .env
+# Edite POSTGRES_PASSWORD em .env para usar uma senha forte.
+docker compose up -d
+docker compose ps
+```
+
+O serviço fica disponível somente em `127.0.0.1:5432` por padrão. Banco, usuário e porta podem ser configurados em `.env`; os dados persistem no volume Docker `postgres_data`. Clientes locais podem conectar em `localhost:5432` com as credenciais desse arquivo. Para parar o serviço sem apagar os dados, use `docker compose down`.
+
+Na primeira inicialização de um volume vazio, o Docker executa `database/init/001_initial_schema.sql` e cria:
+
+- `matches`, `players`, `match_participants` e `match_ratings` para partidas, identidades de jogadores, participação/equipe/civilização/resultado e ratings;
+- `replay_assets` e `replay_download_attempts` para disponibilidade dos replays, arquivos, checksums e tentativas de download;
+- `match_actions`, `match_inputs`, `match_player_snapshots`, `match_objects`, `match_chat` e `match_age_ups` para dados e eventos extraídos dos replays;
+- `ingestion_runs` e `source_artifacts` para registrar execuções e a proveniência dos payloads e arquivos.
+
+Campos consultados com frequência são relacionais; payloads variáveis e metadados ficam em `JSONB`. A ingestão atual ainda não grava no PostgreSQL; a conexão entre o pipeline e o banco será uma etapa posterior.
+
+Os scripts em `database/init/` são executados automaticamente **somente quando o volume é inicializado pela primeira vez**. Alterações futuras do schema devem ser aplicadas como migrações versionadas, sem apagar o volume existente.
 
 ## Pipeline de ingestão
 

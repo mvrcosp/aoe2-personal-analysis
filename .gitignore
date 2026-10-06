@@ -1,5 +1,8 @@
 docs/
 env/
+.env
+.env.*
+!.env.example
 
 data/raw/aoe2rec/*.aoe2record
 data/raw/gz/

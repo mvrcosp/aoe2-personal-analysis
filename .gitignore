@@ -2,6 +2,8 @@ docs/
 env/
 
 data/raw/aoe2rec/*.aoe2record
+data/raw/gz/
+data/raw/zip/
 data/raw/api/
 data/processed/
 
